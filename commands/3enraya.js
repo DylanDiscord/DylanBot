@@ -7,6 +7,7 @@ new TicTacToe({
     command: "tictactoe",
     commandOptionName: "opponent",
     textCommand: "d!tictactoe",
+    
 })
 .login()
 .then(() => console.log("El Bot esta Online"))

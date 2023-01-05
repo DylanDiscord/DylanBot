@@ -17,7 +17,7 @@ module.exports = {
 		],
         [
             new Discord.MessageButton()
-         .setURL("https://discord.gg/rPVmYjzqKd")
+         .setURL("https://top.gg/bot/994667997320978553")
          .setStyle('LINK')
          .setLabel('Top.GG')
          .setEmoji('<:_:1039897753351897138>')

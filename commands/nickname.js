@@ -1,4 +1,6 @@
 const Discord = require("discord.js");
+const db = require("quick.db")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
   name: "nickname",
@@ -8,6 +10,14 @@ module.exports = {
   aliases: ['nick', 'name', 'user'],
 
   run: async (client, message, args) => {
+
+    let d = db.get(`premium_${message.author.id}`);
+        if(d !== true) {
+            let embed = new Discord.MessageEmbed()
+            .setColor("RED")
+            .setDescription("Este comando solo es para usuarios premiums")
+           return message.channel.send({ embeds: [embed] })
+        }
 
     if(!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply("✖️ **¡No tienes suficientes permisos para usar este comando!**")
     if(!args[0]) {

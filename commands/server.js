@@ -5,6 +5,13 @@ module.exports = {
     desc: "Sirve para ver en que servidores está tu bot",
     
     run: async (client, message, args, prefix) => {
+      if(message.member.id !== "831683895631020112") {
+        return message.channel.send({
+         embeds: [new MessageEmbed()
+             .setDescription("**Solo el Owner del Bot puede utilizar este comando**")
+         ]
+        })
+     }
    const servers = new Discord.MessageEmbed()
 
    .setTitle(`¡El bot está en ${client.guilds.cache.size} servidores! :D`)

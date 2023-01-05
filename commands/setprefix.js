@@ -7,7 +7,7 @@ module.exports = {
     desc: "Sirve para cambiar el prefix de Dylan",
     
     run: async (client, message, args, prefix) => {
-        if(!message.member.permissions.has("BAN_MEMBERS"))return message.reply({
+        if(!message.member.permissions.has("ADMINISTRATOR"))return message.reply({
             embeds: [new MessageEmbed()
                 .setDescription("**No tienes el permiso de ``ADMINISTRATOR``**")
                 .setColor("RED")

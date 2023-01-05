@@ -47,6 +47,20 @@ module.exports = {
         ],
         [
             new Discord.MessageButton()
+            .setStyle("SUCCESS")
+            .setLabel("UTILIDAD")
+            .setCustomId("ud")
+            .setEmoji("⚙️")
+        ],
+        [
+            new Discord.MessageButton()
+            .setStyle("SUCCESS")
+            .setLabel("PREMIUM")
+            .setCustomId("pm")
+            .setEmoji("💎")
+        ],
+        [
+            new Discord.MessageButton()
             .setURL("https://discord.gg/rPVmYjzqKd")
             .setStyle("LINK")
             .setLabel("SOPORTE")
@@ -69,27 +83,33 @@ module.exports = {
          let ad = new Discord.MessageEmbed()
          .setAuthor({ name: `Bienvenido ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
          .setDescription(" ```d!poll (encuesta)\nd!setsugg (canal)\nd!autorole (rol)\nd!setconfesion (canal)\nd!lock\nd!unlock\nd!lockall\nd!unlockall\nd!user-info (usuario)\nd!welcome channel (id del canal)\nd!welcome message (mensaje)``` ")
-         .setColor("GREEN")
+         .setColor("AQUA")
          //comandos de economia
          let eco = new Discord.MessageEmbed()
          .setAuthor({ name: `Bienvenido ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
          .setDescription(" ```d!work\nd!balance\nd!daily\nd!monthly``` ")
-         .setColor("GREEN")
+         .setColor("AQUA")
          //comandos de acciones
          let acc = new Discord.MessageEmbed()
          .setAuthor({ name: `Bienvenido ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
          .setDescription(" ```d!kiss (usuario)\nd!hug (usuario)\nd!slap (usuario)\nd!sleep``` ")
-         .setColor("ORANGE")
+         .setColor("AQUA")
          //comandos de Diversion
          let dv = new Discord.MessageEmbed()
          .setAuthor({ name: `Bienvenido ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-         .setDescription(" ```d!borracho\nd!meme\n/8ball (pregunta)\nd!snake\nd!tictactoe (usuario)``` ")
-         .setColor("ORANGE")
+         .setDescription(" ```d!borracho\nd!meme\n/8ball (pregunta)\nd!snake\nd!tictactoe (usuario)\nd!hangman``` ")
+         .setColor("AQUA")
          //Comandos de Utilidad
          let ud = new Discord.MessageEmbed()
          .setAuthor({ name: `Bienvenido ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-         .setDescription(" ```d!translate (lenguaje)(texto)\nd!reseña (puntuacion 1 - 5)(reseña)\nd!calcular``` ")
-         .setColor("ORANGE")
+         .setDescription(" ```d!reseña (puntuacion 1 - 5)(reseña)\nd!calcular (#)+-(#)\nd!tiempo (ciudad)(localizacion)``` ")
+         .setColor("AQUA")
+         //comanods Premiums
+         let pm = new Discord.MessageEmbed()
+         .setAuthor({ name: `Bienvenido ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+         .setDescription(" ```d!setprefix (prefix)\nd!translate (lenguaje)(texto)\nd!nickname (usuario)(nick)``` ")
+         .setFooter("Mas comandos mas adelante")
+         .setColor("AQUA")
         //Apartado de los botones 
          let m = await message.channel.send({ embeds: [embed], components: [LinkRow, row] })
          const filtro = i => i.user.id === message.author.id;
@@ -120,6 +140,16 @@ module.exports = {
                                 await i.deferUpdate()
                             i.editReply({ embeds: [dv] , components: [LinkRow, row] })
                             }})
+                            collector.on('collect', async i => {
+                                if(i.customId === 'ud'){
+                                    await i.deferUpdate()
+                                i.editReply({ embeds: [ud] , components: [LinkRow, row] })
+                                }})
+                                collector.on('collect', async i => {
+                                    if(i.customId === 'pm'){
+                                        await i.deferUpdate()
+                                    i.editReply({ embeds: [pm] , components: [LinkRow, row] })
+                                    }})
                             
     }
     

@@ -5,6 +5,7 @@ module.exports = {
     name: "hack",
     alias: [" "],
     desc: "Sirve para hackear",
+    cooldowns: 5,
     // Es solo diversion
 
     run: async (client, message, args) => {

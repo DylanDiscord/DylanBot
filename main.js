@@ -11,15 +11,8 @@ const { config } = require("process");
 const { arg } = require("mathjs");
 const db = require("quick.db");
 const mongoose = require("mongoose");
+const ms = require("ms");
 
-mongoose.connect("mongodb+srv://DylanBot:dylanbotuwuñ123@cluster0.apadety.mongodb.net/?retryWrites=true&w=majority", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log("🟢Conectado correctamente a mongodb🟢")
-}).catch((error) => {
-  console.log("🔴No se ha podido conectarse a mongodb🔴")
-})
 var prefix = data.prefix;
 
 client.comandos = new Discord.Collection();
@@ -152,7 +145,28 @@ client.on("messageCreate", async (message) => {
     if (cmd) {
       return cmd.run(client, message, args)
     }
-    if(!cmd) return
+    const cooldowns = new Collection()
+
+   if (!cooldowns.has(command.name)) {
+    cooldowns.set(command.name, new Collection());
+  }
+
+  const now = Date.now();
+  const timestamps = cooldowns.get(command.name);
+  const cooldownAmount = (command.cooldown || 3) * 1000;
+
+  if (timestamps.has(message.author.id)) {
+    const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+    if (now < expirationTime) {
+      const timeLeft = (expirationTime - now) / 1000;
+
+      return message.channel
+        .send(`No puedes usar el comando durante ${Math.round(timeLeft.toFixed(1))} segundos`)
+    }
+  }
+  timestamps.set(message.author.id, now);
+  setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
   
   
   
@@ -322,19 +336,19 @@ client.on('guildMemberAdd', async (member) => {
       let welcome_message = await db.get(`welcome_message_${guild.id}`)
       channel.send({content: welcome_message.replace(`%user%`, member.user.username).replace(`%user.tag%`, member.user).replace(`%guild%`, guild.name)}).catch(error => {})})
 
-      // client.on('guildMemberAdd', async (member) => {
-      //   let guild = member.guild;
+      client.on('guildMemberAdd', async (message, interaction) => {
+        let guild = interaction.guild.id;
        
-      //       let channel = client.channels.cache.get(await db.get(`setwelcome_embed_${guild.id}`))
-      //       let titulo = await db.get(`setwelcome_embed_t_${guild.id}`)
-      //       let descripcion = await db.get(`setwelcome_embed_d_${guild.id}`)
-      //       let color = await db.get(`setwelcome_embed_c_${guild.id}`)
+            let channel = client.channels.cache.get(await db.get(`setwelcome_embed_${guild.id}`))
+            let titulo = await db.get(`setwelcome_t_${guild.id}`)
+            let descripcion = await db.get(`setwelcomed_d${guild.id}`)
+            let color = await db.get(`setwelcomec_${guild.id}`)
 
-      //       const embedwelcome = new Discord.MessageEmbed()
-      //       .setTitle(`${titulo}`)
-      //       .setDescription(`${descripcion}`)
-      //       .setColor(`${color}`)
+            const embedwelcome = new Discord.MessageEmbed()
+            .setTitle(`${titulo}`)
+            .setDescription(`${descripcion}`)
+            .setColor(`${color}`)
 
-      //       channel.send({ embeds: [embedwelcome] })})
+            channel.send({ embeds: [embedwelcome] })})
 
 client.login(data.token);

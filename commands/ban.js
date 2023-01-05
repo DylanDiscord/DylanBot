@@ -7,7 +7,12 @@ module.exports = {
 
 run: async(client, message, args) => {
 
-  if(!message.member.permissions.has("BAN_MEMBERS"))return message.reply("No tienes los permisos suficientes! :pensive:\nPermisos faltantes : `BAN_MEMBERS`")
+  if(!message.member.permissions.has("BAN_MEMBERS"))return message.reply({
+    embeds: [new MessageEmbed()
+        .setDescription("**No tienes el permiso de ``BAN_MEMBERS``**")
+        .setColor("RED")
+    ]
+})
   if(!message.guild.me.permissions.has("BAN_MEMBERS"))return message.reply("No tengo los permisos suficientes! :cry:\nPermisos faltantes : `BAN_MEMBERS`")
 
     const user = message.mentions.members.first();
