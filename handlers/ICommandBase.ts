@@ -1,7 +1,8 @@
-import { SlashCommandBuilder } from "discord.js";
-import CustomClient from "./CustomClient";
+import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
+import CustomClient from "./CustomClient.js";
 
-export default interface ICommandBase {
-    command: SlashCommandBuilder;
-    run (client: CustomClient, ...args: any): Promise<void>;
+export type OCommandBuilder = Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
+export interface ICommandBase {
+    command: OCommandBuilder;
+    run (client: CustomClient, interaction: ChatInputCommandInteraction): Promise<void>;
 }
