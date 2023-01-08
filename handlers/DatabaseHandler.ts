@@ -24,13 +24,17 @@ export class DatabaseHandler {
         if (tableNames == null) return;
         for (const tableName of tableNames) {
             const tableData: Array<any> = await CustomMethods.returnPromiseResult((resolve, reject): void => {
-               this.#dataFile.all(`SELECT * FROM pragma_table_info('${tableName}')`, (error: Error | null, data: any[]): void => {
+               this.#dataFile.all(`SELECT * FROM pragma_table_info('${tableName.name}')`, (error: Error | null, data: any[]): void => {
                    if (error != null) reject(error);
                    else resolve(Array.isArray(data) ? data : [data]);
                });
             });
+            if (tableData.some(d => TableTypes.parse(d.type.toUpperCase()) == null)) {
+                console.warn(`Table: ${tableName} contains invalid type, it will not be indexed.`)
+                continue;
+            }
             //add unique if necessary
-            //this.tables.set(tableName.name, new Table(tableName.name, tableData.map(t => ({name: t.name, type: TableTypes.parse(t.type), notNull: t.notnull == 1, primaryKey: t.primaryKey == 1, unique: false})), this.#dataFile));
+            this.tables.set(tableName.name, new Table(tableName.name, tableData.map(t => ({name: t.name, type: TableTypes.parse(t.type.toUpperCase()), notNull: t.notnull, primaryKey: t.primaryKey, unique: false}) as IColumn), this.#dataFile));
         }
     }
 

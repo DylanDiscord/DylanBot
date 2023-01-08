@@ -1,28 +1,27 @@
-import { ICommandBase, OCommandBuilder } from "../handlers/ICommandBase.js";
-import CustomClient from "../handlers/CustomClient.js";
-import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder} from "discord.js";
+import { CommandBase, OCommandBuilder } from "../handlers/CommandBase.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config/config.json" assert {type: "json"};
 import { performance } from "node:perf_hooks";
 import util from "node:util";
 
-export default class Eval implements ICommandBase {
+export default class Eval extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
         .setName("eval")
         .setDescription("Evalúa código de JavaScript.")
         .addStringOption(o => o.setName("código").setDescription("El código que evaluar.").setRequired(true))
 
-    async run(client: CustomClient, interaction: ChatInputCommandInteraction): Promise<void> {
-        if (!config.evalUsers.includes(interaction.user.id)) {
+    async run(): Promise<void> {
+        if (!config.evalUsers.includes(this.context.user.id)) {
             const errorEmbed: EmbedBuilder = new EmbedBuilder()
                 .setTitle("Error")
                 .setDescription("No pareces estar en la lista de usuarios que pueden usar este comando.")
                 .setColor(0xff0000);
 
-            await interaction.reply({embeds: [errorEmbed]});
+            await this.context.reply({embeds: [errorEmbed]});
             return;
         }
 
-        const expression: string | null = interaction.options.getString("código")!;
+        const expression: string | null = this.context.options.getString("código")!;
 
         try {
             performance.mark("eval-start");
@@ -43,7 +42,7 @@ export default class Eval implements ICommandBase {
                 .setFooter({text: `Evaluado en: ${performance.measure("eval", "eval-start", "eval-end").duration}ms`})
                 .setTimestamp(Date.now());
 
-            await interaction.reply({embeds: [successEmbed]});
+            await this.context.reply({embeds: [successEmbed]});
         } catch (exception: any) {
             const errorEmbed: EmbedBuilder = new EmbedBuilder()
                 .setTitle("Evaluación")
@@ -54,7 +53,7 @@ export default class Eval implements ICommandBase {
                 )
                 .setTimestamp(Date.now());
 
-            await interaction.reply({embeds: [errorEmbed]});
+            await this.context.reply({embeds: [errorEmbed]});
         }
     }
 }
