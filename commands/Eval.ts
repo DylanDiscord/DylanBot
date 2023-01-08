@@ -8,7 +8,7 @@ export default class Eval extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
         .setName("eval")
         .setDescription("Evalúa código de JavaScript.")
-        .addStringOption(o => o.setName("código").setDescription("El código que evaluar.").setRequired(true))
+        .addStringOption(o => o.setName("código").setDescription("El código que evaluar.").setRequired(true));
 
     async run(): Promise<void> {
         if (!config.evalUsers.includes(this.context.user.id)) {
@@ -26,7 +26,7 @@ export default class Eval extends CommandBase {
         try {
             performance.mark("eval-start");
 
-            const resultado: string = util.inspect(eval(expression), {depth: 1})
+            const resultado: string = util.inspect(eval(`(async () => {${expression}})();`), {depth: 1})
                 .replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203))
                 .substring(0, 1000);
 

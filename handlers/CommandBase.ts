@@ -10,6 +10,7 @@ export abstract class CommandBase {
         this.context = co;
         this.client = cl;
     }
+
     public abstract command: OCommandBuilder;
     public abstract run (): Promise<void>;
 }
