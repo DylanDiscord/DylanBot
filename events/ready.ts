@@ -22,7 +22,7 @@ export default async (client: CustomClient) => {
             }]
         });
         intervalIndex = config.status.length - 1 == intervalIndex ? 0 : intervalIndex + 1;
-    }, 10800000);
+    }, 100000);
 
     console.log("ready!");
 }
