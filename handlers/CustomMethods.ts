@@ -4,9 +4,13 @@ import { client } from "../exportMain.js";
 export namespace CustomMethods {
     export function parseJsonVariables(json: object): object {
         const jsonString: string = JSON.stringify(json);
-        const matches: RegExpMatchArray | null = jsonString.match(/{.+}/gm);
+        const matches: RegExpMatchArray | null = jsonString.match(/\$\{.*}/gm);
         if (matches == null) return json;
-        for (const match of matches) jsonString.replace(match, eval(match.substring(1, match.length - 1)));
+        console.log(matches)
+        // for (const match of matches) {
+        //     console.log(`${match}\n`);
+        //     //jsonString.replace(match, eval(match.substring(1, match.length - 1)));
+        // }
         return JSON.parse(jsonString);
     }
 

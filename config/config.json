@@ -8,7 +8,7 @@
     },
     {
       "type": 3,
-      "name": "\uD83D\uDC40 {client.guilds.cache.size} Servers \uD83D\uDC40",
+      "name": "\uD83D\uDC40 &{client.guilds.cache.size} Servers \uD83D\uDC40",
       "status": "online"
     },
     {

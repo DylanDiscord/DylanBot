@@ -1,8 +1,8 @@
-import CustomClient from "../handlers/CustomClient.js";
 import { CommandInteraction } from "discord.js";
-import {CommandBase} from "../handlers/CommandBase";
+import { CommandBase } from "../handlers/CommandBase.js";
+import { client } from "../exportMain.js";
 
-export default async (client: CustomClient, interaction: CommandInteraction) => {
+export default async (interaction: CommandInteraction) => {
     if (interaction.isChatInputCommand()) {
         const context: CommandBase = client.commands.get(interaction.commandName)!;
         context.context = interaction;

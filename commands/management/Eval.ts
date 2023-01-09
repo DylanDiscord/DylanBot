@@ -1,22 +1,15 @@
-// noinspection ES6UnusedImports
-
 import { CommandBase, OCommandBuilder } from "../../handlers/CommandBase.js";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../../config/config.json" assert {type: "json"};
-import CustomClient from "../../handlers/CustomClient";
 import { performance } from "node:perf_hooks";
 import util from "node:util";
 
-//eval imports
-import { client as eClient } from "../../exportMain.js";
 
 export default class Eval extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
         .setName("eval")
         .setDescription("Evalúa código de JavaScript.")
         .addStringOption(o => o.setName("código").setDescription("El código que evaluar.").setRequired(true));
-
-    client: CustomClient = eClient;
 
     async run(): Promise<void> {
         if (!config.evalUsers.includes(this.context.user.id)) {
