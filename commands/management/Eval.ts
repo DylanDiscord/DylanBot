@@ -1,14 +1,22 @@
-import { CommandBase, OCommandBuilder } from "../handlers/CommandBase.js";
+// noinspection ES6UnusedImports
+
+import { CommandBase, OCommandBuilder } from "../../handlers/CommandBase.js";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import config from "../config/config.json" assert {type: "json"};
+import config from "../../config/config.json" assert {type: "json"};
+import CustomClient from "../../handlers/CustomClient";
 import { performance } from "node:perf_hooks";
 import util from "node:util";
+
+//eval imports
+import { client as eClient } from "../../exportMain.js";
 
 export default class Eval extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
         .setName("eval")
         .setDescription("Evalúa código de JavaScript.")
         .addStringOption(o => o.setName("código").setDescription("El código que evaluar.").setRequired(true));
+
+    client: CustomClient = eClient;
 
     async run(): Promise<void> {
         if (!config.evalUsers.includes(this.context.user.id)) {
@@ -26,7 +34,7 @@ export default class Eval extends CommandBase {
         try {
             performance.mark("eval-start");
 
-            const resultado: string = util.inspect(eval(`(async () => {${expression}})();`), {depth: 1})
+            const resultado: string = util.inspect(await eval(`(async () => {return ${expression}})();`), {depth: 1})
                 .replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203))
                 .substring(0, 1000);
 
@@ -46,7 +54,7 @@ export default class Eval extends CommandBase {
         } catch (exception: any) {
             const errorEmbed: EmbedBuilder = new EmbedBuilder()
                 .setTitle("Evaluación")
-                .setColor(0x00ff00)
+                .setColor(0xff0000)
                 .addFields(
                     {name: "Expresión", value: `\`\`\`js\n${expression}\`\`\``},
                     {name: "Resultado", value: `\`\`\`${exception}\`\`\``}
