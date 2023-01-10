@@ -14,7 +14,7 @@ export default class Trivia extends CommandBase {
     async run(): Promise<void> {
         await this.context.deferReply();
 
-        const token: AxiosResponse<ITokenResponse> = await axios("https://opentdb.com/api_token.php?command=request");
+        const token: AxiosResponse<ITokenResponse> = await axios.get("https://opentdb.com/api_token.php?command=request");
 
         const errorEmbed: EmbedBuilder = new EmbedBuilder()
             .setTitle("Hubo un error")
@@ -47,19 +47,19 @@ export default class Trivia extends CommandBase {
             await new Promise<void>((resolve): void => {
                 const questionEmbed: EmbedBuilder = new EmbedBuilder()
                     .setTitle(`Pregunta ${i}`)
-                    .setDescription(`${question.question}\n\n**Dificultad**: \`${question.difficulty.replace(/easy/gmi, "fácil").replace(/medium/gmi, "medio").replace(/hard/gmi, "difícil")}\`\n`)
+                    .setDescription(`${question.question}\n\n**Dificultad**: \`${question.difficulty}\`\n**Categoría**: \`${question.category}\``);
             });
         }
     }
 
     static async getQuestions(token: string, amount: number, difficulty: string): Promise<ITriviaResponse | null> {
-        const result: AxiosResponse<ITriviaResponse> = await axios(`https://opentdb.com/api.php?amount=${amount}&token=${token}${difficulty != "any" ? `&difficulty=${difficulty}` : ""}`);
+        const result: AxiosResponse<ITriviaResponse> = await axios.get(`https://opentdb.com/api.php?amount=${amount}&token=${token}${difficulty != "any" ? `&difficulty=${difficulty}` : ""}`);
 
         if (result.data.response_code == 1 || !(result.status < 300 && result.status > 200))
             return null;
 
         if (result.data.response_code == 4 || result.data.response_code == 3) {
-            const newToken: AxiosResponse<ITokenResponse> = await axios("https://opentdb.com/api_token.php?command=request");
+            const newToken: AxiosResponse<ITokenResponse> = await axios.get("https://opentdb.com/api_token.php?command=request");
 
             if(newToken.data.response_code != 0 || !(newToken.status < 300 && newToken.status > 200))
                 return null;

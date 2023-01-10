@@ -4,7 +4,6 @@ import config from "../../config/config.json" assert {type: "json"};
 import { performance } from "node:perf_hooks";
 import util from "node:util";
 
-
 export default class Eval extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
         .setName("eval")

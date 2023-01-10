@@ -5,11 +5,12 @@ import config from "../config/config.json" assert {type: "json"};
 import { performance } from "node:perf_hooks";
 import { client } from "../exportMain.js";
 import {CustomMethods} from "../handlers/CustomMethods.js";
+import axios from "axios";
 
 export default async () => {
     try {
-        const rest: REST = new REST({version: "10"}).setToken(process.env.TOKEN!);
-        await rest.put(Routes.applicationCommands(process.env.APPID!), {body: client.commands.filter(c => c.enabled).map(c => c.command.toJSON())});
+        await (new REST({version: "10"}).setToken(process.env.TOKEN!))
+            .put(Routes.applicationCommands(process.env.APPID!), {body: client.commands.filter(c => c.enabled).map(c => c.command.toJSON())});
     } catch (error) {
         console.log(error);
     }
@@ -31,9 +32,12 @@ export default async () => {
     changeStatus({index: intervalIndex, parsedConfig: parsedConfig});
     setInterval(() => changeStatus({index: intervalIndex, parsedConfig: parsedConfig}), 100000);
 
+    const {remaining, total} = await axios.get("https://discord.com/api/v10/gateway/bot", {headers: {Authorization: `Bot ${process.env.TOKEN}`}}).then(d => d.data.session_start_limit);
+
     performance.mark("end-loading");
 
-    console.log(`ready!\nstarted in: ${Math.round(performance.measure("loading", "start-loading", "end-loading").duration) / 1000} Seconds.`);
+    console.clear();
+    console.log(`|✅  ready!\n|⏰  started in: ${Math.round(performance.measure("loading", "start-loading", "end-loading").duration) / 1000} Seconds.\n|❤️ You have ${remaining} of ${total} login attempts left.`);
 
     performance.clearMarks();
     performance.clearMeasures();

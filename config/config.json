@@ -16,5 +16,10 @@
       "name": "❗ El mejor Bot ❗",
       "status": "idle"
     }
-  ]
+  ],
+  "paths": {
+    "databases": "./databases",
+    "commands": "./commands",
+    "events": "./events"
+  }
 }

@@ -1,12 +1,16 @@
 import fs from "node:fs";
-import { client } from "../exportMain.js";
+import Sqlite3 from "sqlite3";
 
 export namespace CustomMethods {
+    /**
+    * @todo not finished yet.
+    */
     export function parseJsonVariables(json: object): object {
+        return json;
         const jsonString: string = JSON.stringify(json);
         const matches: RegExpMatchArray | null = jsonString.match(/\$\{.*}/gm);
         if (matches == null) return json;
-        console.log(matches)
+        console.log(matches);
         // for (const match of matches) {
         //     console.log(`${match}\n`);
         //     //jsonString.replace(match, eval(match.substring(1, match.length - 1)));
@@ -15,7 +19,7 @@ export namespace CustomMethods {
     }
 
     export async function sleep(time: number): Promise<void> {
-        return await new Promise<void>((resolve) => setTimeout(() => resolve(), time))
+        return await new Promise<void>((resolve) => setTimeout(() => resolve(), time));
     }
 
     export function getFilesRecursively(path: string): Array<string> {
@@ -27,12 +31,7 @@ export namespace CustomMethods {
         return files;
     }
 
-    export async function dbRun(command: string, params: object): Promise<any> {
-        return await new Promise<any>((resolve, reject) => {
-            client.database.all(command, params, (error: Error | null, result: any[]) => {
-                if (error != null) reject(error);
-                else resolve(result);
-            });
-        });
+    export async function fillDatabase(ref: {database: Sqlite3.Database}): Promise<void> {
+        ref.database.all("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
     }
 }
