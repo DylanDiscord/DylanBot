@@ -2,19 +2,14 @@ import fs from "node:fs";
 import Sqlite3 from "sqlite3";
 
 export namespace CustomMethods {
-    /**
-    * @todo not finished yet.
-    */
-    export function parseJsonVariables(json: object): object {
-        return json;
+    // noinspection JSUnusedLocalSymbols
+    export function parseJsonVariables(json: object, ref?: object): object {
         const jsonString: string = JSON.stringify(json);
-        const matches: RegExpMatchArray | null = jsonString.match(/\$\{.*}/gm);
+        const matches: RegExpMatchArray | null = jsonString.match(/\$\{((?:.*?(?:\$?\{.*?})?.*?)*?)}/gm);
         if (matches == null) return json;
-        console.log(matches);
-        // for (const match of matches) {
-        //     console.log(`${match}\n`);
-        //     //jsonString.replace(match, eval(match.substring(1, match.length - 1)));
-        // }
+        for (const match of matches) {
+            jsonString.replace(match, eval(match.substring(2, match.length - 1))).toString();
+        }
         return JSON.parse(jsonString);
     }
 
@@ -34,4 +29,6 @@ export namespace CustomMethods {
     export async function fillDatabase(ref: {database: Sqlite3.Database}): Promise<void> {
         ref.database.all("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
     }
+
+    export const randomColor = () => Math.floor(Math.random() * 0xffffff)
 }

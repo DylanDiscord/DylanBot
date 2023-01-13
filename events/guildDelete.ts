@@ -1,6 +1,6 @@
 import { Guild } from "discord.js";
-import config from "../config/config.json" assert {type: "json"};
-import {client} from "../exportMain.js";
+import { Config } from "../exportMain.js";
+import { client } from "../exportMain.js";
 import fs from "node:fs";
 
 export default (guild: Guild) => {
@@ -10,7 +10,7 @@ export default (guild: Guild) => {
             client.guild_databases.delete(guild.id);
         }
 
-        const dbPath: string = `../${config.paths.databases}/${guild.id}.db`;
+        const dbPath: string = `../${Config.paths.databases}/${guild.id}.db`;
         if (fs.existsSync(dbPath)) {
             fs.rmSync(dbPath);
         }
