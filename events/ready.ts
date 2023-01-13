@@ -1,10 +1,10 @@
 import { PresenceStatusData, REST, Routes } from "discord.js";
 import * as process from "process";
-import config from "../config/config.json" assert {type: "json"};
+import { Config } from "../exportMain.js";
 (await import("dotenv")).config({path: "../config/.env"});
 import { performance } from "node:perf_hooks";
 import { client } from "../exportMain.js";
-import {CustomMethods} from "../handlers/CustomMethods.js";
+import { CustomMethods } from "../exportMain.js";
 import axios from "axios";
 
 export default async () => {
@@ -15,22 +15,21 @@ export default async () => {
         console.log(error);
     }
 
-    const parsedConfig: any = CustomMethods.parseJsonVariables(config);
-
-    function changeStatus(ref: {index: number, parsedConfig: any}) {
+    const parsedConfig: any = CustomMethods.parseJsonVariables(Config, {client: client});
+    let intervalIndex: number = 0;
+    function changeStatus() {
         client.user!.setPresence({
-            status: config.status[ref.index].status as PresenceStatusData,
+            status: parsedConfig.status[intervalIndex].status as PresenceStatusData,
             activities: [{
-                name: ref.parsedConfig.status[ref.index].name,
-                type: ref.parsedConfig.status[ref.index].type,
+                name: parsedConfig.status[intervalIndex].name,
+                type: parsedConfig.status[intervalIndex].type,
             }]
         });
-        ref.index = ref.parsedConfig.status.length - 1 == ref.index ? 0 : ref.index + 1;
+        intervalIndex = parsedConfig.status.length - 1 == intervalIndex ? 0 : intervalIndex + 1;
     }
 
-    let intervalIndex: number = 0;
-    changeStatus({index: intervalIndex, parsedConfig: parsedConfig});
-    setInterval(() => changeStatus({index: intervalIndex, parsedConfig: parsedConfig}), 100000);
+    changeStatus();
+    setInterval(changeStatus, 3600000);
 
     const {remaining, total} = await axios.get("https://discord.com/api/v10/gateway/bot", {headers: {Authorization: `Bot ${process.env.TOKEN}`}}).then(d => d.data.session_start_limit);
 

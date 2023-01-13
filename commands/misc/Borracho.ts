@@ -1,7 +1,7 @@
 import { CommandBase, OCommandBuilder } from "../../handlers/CommandBase.js";
 import { EmbedBuilder, GuildEmoji, SlashCommandBuilder } from "discord.js";
 import { CustomMethods } from "../../handlers/CustomMethods.js";
-import { client } from "../../exportMain.js";
+import {client, Config} from "../../exportMain.js";
 
 export default class Borracho extends CommandBase {
     public command: OCommandBuilder = new SlashCommandBuilder()
@@ -22,7 +22,7 @@ export default class Borracho extends CommandBase {
         .setTitle("🍻 Nivel de alcoholismo 🍻")
         .setDescription(`Tu nivel de alcohol es de ${Math.floor(Math.random() * 100)}%`)
         .setImage("https://media.tenor.com/yr-ir7mI9vgAAAAi/chin-chin-cerveza.gif")
-        .setColor(0x00ffff);
+        .setColor(Config.colors.defaultEmbed);
 
         await this.context.editReply({ embeds: [alcoholismo]});
     }

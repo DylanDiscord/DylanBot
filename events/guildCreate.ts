@@ -1,4 +1,4 @@
-import config from "../config/config.json" assert {type: "json"};
+import { Config } from "../exportMain.js";
 import { Guild } from "discord.js";
 import fs from "node:fs";
 import { client } from "../exportMain.js";
@@ -8,7 +8,7 @@ import fillDatabase = CustomMethods.fillDatabase;
 
 export default async (guild: Guild) => {
     {
-        const dbPath: string = `../${config.paths.databases}/${guild.id}.db`;
+        const dbPath: string = `../${Config.paths.databases}/${guild.id}.db`;
         if (!fs.existsSync(dbPath)) {
             const db: Sqlite3.Database = new Sqlite3.Database(dbPath, Sqlite3.OPEN_CREATE | Sqlite3.OPEN_READWRITE);
             await fillDatabase({database: db});
