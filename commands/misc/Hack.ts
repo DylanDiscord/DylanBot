@@ -1,7 +1,7 @@
 import { CommandBase, OCommandBuilder } from "../../handlers/CommandBase.js";
 import { EmbedBuilder, GuildEmoji, SlashCommandBuilder } from "discord.js";
 import { CustomMethods } from "../../handlers/CustomMethods.js";
-import { client } from "../../exportMain.js";
+import { client, Config } from "../../exportMain.js";
 
 export default class Borracho extends CommandBase {
     public command: OCommandBuilder = new SlashCommandBuilder()
@@ -20,7 +20,7 @@ export default class Borracho extends CommandBase {
 
         const cargando: EmbedBuilder = new EmbedBuilder()
             .setDescription(`${loadingEmoji} _Empezando proceso de hackeo contra ${user?.tag}_... ${loadingEmoji}`)
-            .setColor(0x00ffff);
+            .setColor(Config.colors.defaultEmbed);
 
         await this.context.reply({embeds: [cargando]});
         await CustomMethods.sleep(Math.floor(Math.random() * 5000));
@@ -32,8 +32,8 @@ export default class Borracho extends CommandBase {
             {name: "Correo:", value: `${user?.tag}${correos[Math.floor(Math.random() * correos.length)]}`, inline: false},
             {name: "Pruebas Incriminatorias:", value: `${cosas[Math.floor(Math.random() * cosas.length)]}`, inline: false},
         ])
-        .setColor(0x00ffff)
-        .setFooter({text: `Enviado a la database de Dylan correctamente`});
+        .setColor(Config.colors.defaultEmbed)
+        .setFooter({text: `Enviado a la Base de Datos de ${client.user!.username} correctamente`});
 
         await this.context.editReply({ embeds: [hackeado]});
     }

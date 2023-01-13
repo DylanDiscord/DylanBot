@@ -13,7 +13,7 @@ export default class Borracho extends CommandBase {
 
         const cargando: EmbedBuilder = new EmbedBuilder()
             .setDescription(`${loadingEmoji} Midiendo tu nivel de alcoholismo... ${loadingEmoji}`)
-            .setColor(0x00ffff);
+            .setColor(Config.colors.defaultEmbed);
 
         await this.context.reply({embeds: [cargando]});
         await CustomMethods.sleep(Math.floor(Math.random() * 5000));
