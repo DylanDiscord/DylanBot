@@ -9,7 +9,6 @@ export default class Banana extends CommandBase {
         .addUserOption((a) => a.setName("usuario").setDescription("usuario a abrazar").setRequired(true));
 
     async run(): Promise<void> {
-        
         const user = this.context.options.getUser("usuario")
         const embedE: EmbedBuilder = new EmbedBuilder()
         .setDescription("No puedes abrazarte a ti mismo.")
@@ -18,7 +17,7 @@ export default class Banana extends CommandBase {
 
         const embed: EmbedBuilder = new EmbedBuilder()
         .setTitle(`${this.context.user?.tag} le dio un abrazo a ${user?.tag}`)
-        .setImage("https://media.tenor.com/ncblDAj_2FwAAAAC/abrazo-hug.gif")
+        .setImage("")
         .setColor(Config.colors.successEmbed)
 
         await this.context.reply({embeds: [embed]});
