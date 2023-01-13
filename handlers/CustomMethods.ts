@@ -1,5 +1,7 @@
 import fs from "node:fs";
 import Sqlite3 from "sqlite3";
+import * as process from "process";
+import axios from "axios";
 
 export namespace CustomMethods {
     // noinspection JSUnusedLocalSymbols
@@ -31,4 +33,44 @@ export namespace CustomMethods {
     }
 
     export const randomColor = () => Math.floor(Math.random() * 0xffffff)
+
+    export async function getGifsFromTenor(ref: {query: string, locale?: LanguageCodes, limit?: number}): Promise<ITenorResponse> {
+        const baseUrl: string = `https://tenor.googleapis.com/v2/search?key=${process.env.TENORKEY}&q=${ref.query}&locale=${ref.locale ?? LanguageCodes.English}&contentfilter=medium&media_filter=tinygif&limit=${ref.limit ?? 1}&random=true`;
+        const result: ITenorResponse = await axios.get<ITenorResponse>(baseUrl).then(r => r.data);
+        console.log(result);
+        return result;
+    }
+}
+
+export interface ITenorResponse {
+    next: string,
+    results: Array<ITenorGifObject>
+}
+
+export interface ITenorGifObject {
+    created: number,
+    hasaudio: boolean,
+    hascaption: boolean,
+    id: string,
+    itemurl: string
+    media_formats: any,
+    tags: Array<string>,
+    title: string,
+    url: string
+    content_description: string,
+    flags: string,
+    bg_color: string
+}
+
+export enum LanguageCodes {
+    English = "en",
+    Chinese = "zh",
+    Spanish = "es",
+    Arabic = "ar",
+    Bengali = "bn",
+    Portuguese = "pt",
+    Russian = "ru",
+    French = "fr",
+    German = "de",
+    Hindi = "hi"
 }
