@@ -32,13 +32,13 @@ export namespace CustomMethods {
         ref.database.all("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
     }
 
-    export const randomColor = () => Math.floor(Math.random() * 0xffffff)
+    export const randomColor = () => Math.floor(Math.random() * 16777215)
 
-    export async function getGifsFromTenor(ref: {query: string, locale?: LanguageCodes, limit?: number}): Promise<ITenorResponse> {
-        const baseUrl: string = `https://tenor.googleapis.com/v2/search?key=${process.env.TENORKEY}&q=${ref.query}&locale=${ref.locale ?? LanguageCodes.English}&contentfilter=medium&media_filter=tinygif&limit=${ref.limit ?? 1}&random=true`;
-        const result: ITenorResponse = await axios.get<ITenorResponse>(baseUrl).then(r => r.data);
-        console.log(result);
-        return result;
+    export async function getGifsFromTenor(ref: {query: string, locale?: LanguageCodes, limit?: number}): Promise<Array<string>> {
+        const gifs: ITenorResponse = await axios.get<ITenorResponse>(`https://tenor.googleapis.com/v2/search?key=${process.env.TENORKEY}&q=${ref.query}&locale=${ref.locale ?? LanguageCodes.English}&contentfilter=medium&media_filter=gif&limit=${ref.limit ?? 1}&random=true`).then(r => r.data);
+        const results: Array<string> = [];
+        for (const result of gifs.results) results.push(result.media_formats.gif.url);
+        return results;
     }
 }
 
