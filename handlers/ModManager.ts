@@ -13,8 +13,8 @@ export default class ModManager {
         for (const db of this._client.guild_databases.entries()) {
             for (const c of await CustomMethods.getDataFromDb<ICase>({
                 db: db[1],
-                command: "SELECT caseID, reason, userID, moderatorID, caseType, start, end FROM UserCases WHERE caseType = 0 AND end != 0 or null AND end < @current",
-                params: {current: Date.now() / 1000}})) {
+                command: "SELECT caseID, reason, userID, moderatorID, caseType, start, end FROM UserCases WHERE caseType = 0 AND end != 0 or null AND end < $current",
+                params: {$current: Date.now() / 1000}})) {
                 setTimeout(async () => {
                     const banGuild: Guild | undefined = await this._client.guilds.cache.get(db[0]);
                     if (banGuild != null)
@@ -31,8 +31,8 @@ export default class ModManager {
     public async getCases(guild: string, filter?: {order?: "asc" | "desc", user?: string}): Promise<Array<ICase>> {
         return await CustomMethods.getDataFromDb<ICase>({
             db: this._client.guild_databases.get(guild)!,
-            command: `SELECT caseID, reason, userID, moderatorID, caseType, start, end FROM UserCases ${filter?.user != null ? "WHERE userID = @user" : ""} ORDER BY @order`,
-            params: {order: filter?.order ?? "asc", user: filter?.user}});
+            command: `SELECT caseID, reason, userID, moderatorID, caseType, start, end FROM UserCases ${filter?.user != null ? "WHERE userID = $user" : ""} ORDER BY @order`,
+            params: {$order: filter?.order ?? "asc", $user: filter!.user}});
     }
 }
 
