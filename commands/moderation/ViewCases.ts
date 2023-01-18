@@ -11,7 +11,6 @@ import {
     ButtonInteraction,
     Message,
     InteractionCollector,
-    PermissionsBitField
 } from "discord.js";
 
 export default class ViewCases extends CommandBase {

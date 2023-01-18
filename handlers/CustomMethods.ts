@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import Sqlite3 from "sqlite3";
 import * as process from "process";
 import axios from "axios";
+import CustomDb from "./CustomDb";
 
 export namespace CustomMethods {
     // noinspection JSUnusedLocalSymbols
@@ -28,12 +28,6 @@ export namespace CustomMethods {
         return files;
     }
 
-    export async function fillDatabase(ref: {database: Sqlite3.Database}): Promise<void> {
-        ref.database.all("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
-        ref.database.all("CREATE TABLE IF NOT EXISTS UserCases(caseID INTEGER PRIMARY KEY AUTOINCREMENT, userID TEXT, moderatorID TEXT, reason TEXT, caseType INTEGER, start INTEGER, end INTEGER, unique(caseID))");
-        ref.database.all("CREATE TABLE IF NOT EXISTS ServerModerators(roleID INTEGER PRIMARY KEY, unique(roleID));")
-    }
-
     export const randomColor = () => Math.floor(Math.random() * 16777215)
 
     export async function getGifsFromTenor(ref: {query: string, locale?: LanguageCodes, limit?: number}): Promise<Array<string>> {
@@ -41,20 +35,6 @@ export namespace CustomMethods {
         const results: Array<string> = [];
         for (const result of gifs.results) results.push(result.media_formats.gif.url);
         return results;
-    }
-
-    export async function getDataFromDb<T = any>(ref: {db: Sqlite3.Database, command: string, params?: object}): Promise<Array<T>> {
-        return await new Promise<Array<T>>((resolve, reject) => {
-            function callback (error: Error | null, data: any[]) {
-                if (error != null) {
-                    reject(error);
-                    return;
-                }
-                resolve(data as Array<T>);
-            }
-            if (ref.params != null) ref.db.all(ref.command, ref.params, callback);
-            else ref.db.all(ref.command, callback);
-        });
     }
 }
 

@@ -1,10 +1,8 @@
-import {client, CommandBase, Config, OCommandBuilder, PermissionFlags} from "../../exportMain.js";
+import {client, CommandBase, Config, OCommandBuilder} from "../../exportMain.js";
 import {
     SlashCommandBuilder,
     APIInteractionDataResolvedGuildMember,
-    PermissionsBitField,
     EmbedBuilder,
-    GuildMember,
     User
 } from "discord.js";
 import {CaseTypes} from "../../handlers/ModManager.js";
