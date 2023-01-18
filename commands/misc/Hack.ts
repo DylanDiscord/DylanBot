@@ -3,7 +3,7 @@ import { EmbedBuilder, GuildEmoji, SlashCommandBuilder } from "discord.js";
 import { CustomMethods } from "../../handlers/CustomMethods.js";
 import { client, Config } from "../../exportMain.js";
 
-export default class Borracho extends CommandBase {
+export default class Hack extends CommandBase {
     public command: OCommandBuilder = new SlashCommandBuilder()
     .setName("hack")
     .setDescription("A quien vamos a hackear hoy 😈?")

@@ -3,11 +3,11 @@ import {EmbedBuilder, SlashCommandBuilder, User} from "discord.js";
 import {Config, CustomMethods} from "../../exportMain.js";
 import {LanguageCodes} from "../../handlers/CustomMethods.js";
 
-export default class Hug extends CommandBase {
+export default class Baka extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
-        .setName("hug")
-        .setDescription("A quien vas a abrazar 🤗?")
-        .addUserOption((a) => a.setName("usuario").setDescription("usuario a abrazar").setRequired(true));
+        .setName("baka")
+        .setDescription("A quien le vamos a insultar 🤔?")
+        .addUserOption((a) => a.setName("usuario").setDescription("usuario a insultar").setRequired(true));
 
     async run(): Promise<void> {
         
@@ -15,7 +15,7 @@ export default class Hug extends CommandBase {
 
         if(user!.id == this.context.user!.id || user.bot) {
             const embedE: EmbedBuilder = new EmbedBuilder()
-                .setDescription(`No puedes ${user.bot ? "abrazar a un bot" : "abrazarte a ti mismo"}`)
+                .setDescription(`No puedes ${user.bot ? "insultar a un bot" : "insultarte a ti mismo"}`)
                 .setColor(Config.colors.errorEmbed);
 
             await this.context.reply({embeds: [embedE]});
@@ -23,8 +23,8 @@ export default class Hug extends CommandBase {
         }
 
         const embed: EmbedBuilder = new EmbedBuilder()
-            .setTitle(`${this.context.user?.tag} le dio un abrazo a ${user?.tag}`)
-            .setImage((await CustomMethods.getGifsFromTenor({query: "hug", locale: LanguageCodes.Spanish}))[0])
+            .setTitle(`${this.context.user?.tag} le dijo estupido a ${user?.tag}`)
+            .setImage((await CustomMethods.getGifsFromTenor({query: "baka", locale: LanguageCodes.Spanish}))[0])
             .setColor(Config.colors.successEmbed);
 
         await this.context.reply({embeds: [embed]});
