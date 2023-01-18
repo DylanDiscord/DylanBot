@@ -26,7 +26,15 @@ export default class ManageModerators extends CommandBase {
         const role: Role | APIRole = this.context.options.getRole("rol")!;
         const subCommand: string = this.context.options.getSubcommand();
 
-        if (!await (subCommand == "agregar" ? client.mod_manager.addModerator : client.mod_manager.removeModerator)(this.context.guild!, role as Role)) {
+        let success: boolean = false;
+
+        if (subCommand == "agregar") {
+            success = await client.mod_manager.addModerator(this.context.guild!, role as Role);
+        } else if (subCommand == "quitar") {
+            success = await client.mod_manager.removeModerator(this.context.guild!, role as Role);
+        }
+
+        if (!success) {
             const errorEmbed: EmbedBuilder = new EmbedBuilder()
                 .setTitle("Error")
                 .setDescription(subCommand == "agregar" ? `El rol \`${role.name}\` ya esta en la lista de moderadores` : `El rol \`${role.name}\` no esta en la lista de moderadores`)

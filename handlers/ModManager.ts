@@ -1,4 +1,4 @@
-import { CustomClient, CustomMethods } from "../exportMain.js";
+import {CustomClient, CustomMethods, PermissionFlags} from "../exportMain.js";
 import {Guild, Role, User} from "discord.js";
 import Sqlite3 from "sqlite3";
 
@@ -42,11 +42,12 @@ export default class ModManager {
     }
 
     public async isModerator(guild: Guild, user: User): Promise<boolean> {
-        return (await CustomMethods.getDataFromDb({db: this._client.guild_databases.get(guild.id)!, command: `SELECT roleID FROM ServerModerators WHERE ${(await guild.members.fetch(user)).roles.cache.map(r => `roleID = '${r.id}'`).join(" OR ")}`})).length > 0;
+        return (await CustomMethods.getDataFromDb({db: this._client.guild_databases.get(guild.id)!, command: `SELECT roleID FROM ServerModerators WHERE roleID = ${(await guild.members.fetch(user)).roles.cache.map(r => `'${r.id}'`).join(" or ")}`})).length > 0 ||
+            (await guild.members.fetch(user)).roles.cache.some(r => r.permissions.has(PermissionFlags.Administrator));
     }
 
     public async addModerator(guild: Guild, role: Role): Promise<boolean> {
-       return (await CustomMethods.getDataFromDb({db: this._client.guild_databases.get(guild.id)!, command: "INSERT OR IGNORE INTO ServerModerators(roleID) VALUES($id) RETURNING 1 AS 'r'", params: {$id: role.id}})).length > 0;
+        return (await CustomMethods.getDataFromDb({db: this._client.guild_databases.get(guild.id)!, command: "INSERT OR IGNORE INTO ServerModerators(roleID) VALUES($id) RETURNING 1 AS 'r'", params: {$id: role.id}})).length > 0;
     }
 
     public async removeModerator(guild: Guild, role: Role): Promise<boolean> {

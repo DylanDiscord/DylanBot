@@ -22,7 +22,7 @@ export default class CustomClient extends Client {
         this.guilds.cache.forEach((async g => {
             const db: Sqlite3.Database = new Sqlite3.Database(`${dbPath}\\${g.id}.db`, Sqlite3.OPEN_CREATE | Sqlite3.OPEN_READWRITE);
             await CustomMethods.fillDatabase({database: db});
-            this.guild_databases.set(g.id, db);
+            await this.guild_databases.set(g.id, db);
         }));
     }
 }
