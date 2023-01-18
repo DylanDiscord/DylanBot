@@ -14,14 +14,15 @@ export default class CustomClient extends Client {
 
     private readonly _db_path: string;
 
-    public constructor(dbPath: string, options: ClientOptions) {
+    public constructor(dbPath: string, port: number, options: ClientOptions) {
         super(options);
         this._db_path = dbPath.replace(/\//gm, "\\");
         if (!fs.existsSync(this._db_path)) fs.mkdirSync(this._db_path, {recursive: true});
         this.global_database = new CustomDb(`${this._db_path}\\global.db`, Sqlite3.OPEN_CREATE | Sqlite3.OPEN_READWRITE);
         setTimeout(async () => await this.registerDb(),5000);
         this.mod_manager = new ModManager(this);
-        registerApiEvents();
+        this.api.listen(port);
+        setTimeout(registerApiEvents, 5000);
     }
 
     private async registerDb(): Promise<void> {

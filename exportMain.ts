@@ -3,7 +3,7 @@ import CustomClient from "./handlers/CustomClient.js";
 import {Partials, PermissionsBitField, PermissionFlagsBits} from "discord.js";
 
 export const PermissionFlags: typeof PermissionFlagsBits = PermissionsBitField.Flags;
-export const client : CustomClient = new CustomClient(config.paths.databases, {intents: 3276799, partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User]});
+export const client : CustomClient = new CustomClient(config.paths.databases, 3000, {intents: 3276799, partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User]});
 export { CustomMethods } from "./handlers/CustomMethods.js";
 export { CommandBase, OCommandBuilder } from "./handlers/CommandBase.js";
 export { default as CustomClient } from "./handlers/CustomClient.js";
