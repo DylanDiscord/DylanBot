@@ -44,7 +44,7 @@ export default class ViewCases extends CommandBase {
             .setColor(Config.colors.errorEmbed)
             .setTimestamp(Date.now())
 
-        if (cases == null) {
+        if (cases == null || cases.length < 1) {
             await this.context.editReply({embeds: [embed]});
             return;
         }

@@ -37,8 +37,8 @@ export default class ModManager {
     public async getCases(guild: Guild, filter?: {order?: "asc" | "desc", user: User | null}): Promise<Array<ICase>> {
         return await CustomMethods.getDataFromDb<ICase>({
             db: this._client.guild_databases.get(guild.id)!,
-            command: `SELECT caseID as '$caseID', reason as '$reason', userID as '$userID', moderatorID as '$moderatorID', caseType as '$caseType', start as '$start', end as '$end' FROM UserCases ${filter?.user != null ? "WHERE userID = $user" : ""} ORDER BY caseID $order`,
-            params: {$order: filter?.order ?? "asc", $user: filter!.user?.id}});
+            command: `SELECT caseID as '$caseID', reason as '$reason', userID as '$userID', moderatorID as '$moderatorID', caseType as '$caseType', start as '$start', end as '$end' FROM UserCases ${filter?.user != null ? "WHERE userID = $user" : ""} ORDER BY caseID ${filter?.order ?? "desc"}`,
+            params: {$user: filter!.user?.id}});
     }
 
     public async isModerator(guild: Guild, user: User): Promise<boolean> {
