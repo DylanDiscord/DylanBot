@@ -31,6 +31,7 @@ export namespace CustomMethods {
     export async function fillDatabase(ref: {database: Sqlite3.Database}): Promise<void> {
         ref.database.all("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
         ref.database.all("CREATE TABLE IF NOT EXISTS UserCases(caseID INTEGER PRIMARY KEY AUTOINCREMENT, userID TEXT, moderatorID TEXT, reason TEXT, caseType INTEGER, start INTEGER, end INTEGER, unique(caseID))");
+        ref.database.all("CREATE TABLE IF NOT EXISTS ServerModerators(roleID INTEGER PRIMARY KEY, unique(roleID));")
     }
 
     export const randomColor = () => Math.floor(Math.random() * 16777215)
@@ -42,7 +43,7 @@ export namespace CustomMethods {
         return results;
     }
 
-    export async function getDataFromDb<T>(ref: {db: Sqlite3.Database, command: string, params?: object}): Promise<Array<T>> {
+    export async function getDataFromDb<T = any>(ref: {db: Sqlite3.Database, command: string, params?: object}): Promise<Array<T>> {
         return await new Promise<Array<T>>((resolve, reject) => {
             function callback (error: Error | null, data: any[]) {
                 if (error != null) {
