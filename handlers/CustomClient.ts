@@ -1,9 +1,8 @@
 import { Client, ClientOptions, Collection } from "discord.js";
-import { ModManager, CommandBase, CustomDb } from "../exportMain.js";
+import express, {Express, Request, Response} from "express";
+import {ModManager, CommandBase, CustomDb, BaseRoute} from "../exportMain.js";
 import Sqlite3 from "sqlite3";
 import fs from "node:fs";
-import express, { Express } from "express";
-import registerApiEvents from "../api/events.js"
 
 export default class CustomClient extends Client {
     public commands: Collection<string, CommandBase> = new Collection<string, CommandBase>();
@@ -22,7 +21,6 @@ export default class CustomClient extends Client {
         setTimeout(async () => await this.registerDb(),5000);
         this.mod_manager = new ModManager(this);
         this.api.listen(port);
-        setTimeout(registerApiEvents, 5000);
     }
 
     private async registerDb(): Promise<void> {

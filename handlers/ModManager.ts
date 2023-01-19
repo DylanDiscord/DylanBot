@@ -48,6 +48,10 @@ export default class ModManager {
     public async removeModerator(guild: Guild, role: Role): Promise<boolean> {
         return (await this._client.guild_databases.get(guild.id)!.allAsync("DELETE FROM ServerModerators WHERE roleID = $id RETURNING 1 as 'r'", {$id: role.id})).length > 0;
     }
+
+    public async getModerators(guild: Guild): Promise<Array<string>> {
+        return await this._client.guild_databases.get(guild.id)!.allAsync("SELECT roleID FROM ServerModerators");
+    }
 }
 
 export enum CaseTypes {
