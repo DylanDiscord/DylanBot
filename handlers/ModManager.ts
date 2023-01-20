@@ -50,7 +50,7 @@ export default class ModManager {
     }
 
     public async getModerators(guild: Guild): Promise<Array<string>> {
-        return await this._client.guild_databases.get(guild.id)!.allAsync("SELECT roleID FROM ServerModerators");
+        return (await this._client.guild_databases.get(guild.id)!.allAsync("SELECT roleID FROM ServerModerators")).map(m => m.roleID);
     }
 }
 

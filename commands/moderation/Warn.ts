@@ -1,22 +1,17 @@
 import {client, CommandBase, Config, OCommandBuilder} from "../../exportMain.js";
-import {
-    SlashCommandBuilder,
-    APIInteractionDataResolvedGuildMember,
-    EmbedBuilder,
-    User
-} from "discord.js";
+import {SlashCommandBuilder, EmbedBuilder, User} from "discord.js";
 import {CaseTypes} from "../../handlers/ModManager.js";
 
 export default class Warn extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
         .setName("warn")
-        .setDescription("Hacer un warn o aviso a un usuario")
+        .setDescription("Avisar a un usuario de una accion en contra de la normativa.")
         .addUserOption(o => o.setName("usuario").setDescription("Usuario al que hacer un warn o aviso").setRequired(true))
         .addStringOption(o => o.setName("razón").setDescription("Por que vas a hacer un warn o aviso al usuario en question?").setRequired(true))
         .addBooleanOption(o => o.setName("notificar").setDescription("Mandar un dm sobre el aviso o warn al usuario?"))
         .setDMPermission(false);
 
-    async run(): Promise<void> {
+    public async run(): Promise<void> {
         await this.context.deferReply();
 
         const objectiveUser: User = this.context.options.getUser("usuario")!;
@@ -30,8 +25,8 @@ export default class Warn extends CommandBase {
 
         if (objectiveUser.bot) {
             const botEmbed: EmbedBuilder = new EmbedBuilder()
-                .setTitle("User is a bot")
-                .setDescription("You can't warn a bot.")
+                .setTitle("El usuario es un bot.")
+                .setDescription("No puedes hacer warn a un bot.")
                 .setColor(Config.colors.errorEmbed);
 
             await this.context.editReply({embeds: [botEmbed]});
@@ -48,8 +43,8 @@ export default class Warn extends CommandBase {
 
         if (notify) {
             const notifyEmbed: EmbedBuilder = new EmbedBuilder()
-                .setTitle("Obtuviste un aviso | warn")
-                .setDescription(`**Moderador:** \`${this.context.user.tag}\`\n**Razón:** \`${reason}\``)
+                .setTitle("Obtuviste un aviso | Warn")
+                .setDescription(`**Moderador:** \`${this.context.user.tag}\`\n**Servidor:** \`${this.context.guild!.name}\`\n**Razón:** \`${reason}\``)
                 .setColor(Config.colors.defaultEmbed)
                 .setTimestamp(Date.now());
 

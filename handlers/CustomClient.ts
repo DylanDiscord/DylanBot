@@ -1,6 +1,6 @@
-import { Client, ClientOptions, Collection } from "discord.js";
-import express, {Express, Request, Response} from "express";
-import {ModManager, CommandBase, CustomDb, BaseRoute} from "../exportMain.js";
+import {Client, ClientOptions, Collection, Guild, Role, User} from "discord.js";
+import express, {Express} from "express";
+import {ModManager, CommandBase, CustomDb} from "../exportMain.js";
 import Sqlite3 from "sqlite3";
 import fs from "node:fs";
 
@@ -33,5 +33,29 @@ export default class CustomClient extends Client {
             await this.guild_databases.set(g.id, db);
         }));
         await console.log("Databases registered correctly.");
+    }
+
+    public async tryGetGuild(snowflake: string): Promise<Guild | null> {
+        try {
+            return (await this.guilds.fetch(snowflake));
+        } catch {
+            return null;
+        }
+    }
+
+    public async tryGetUser(snowflake: string): Promise<User | null> {
+        try {
+            return (await this.users.fetch(snowflake));
+        } catch {
+            return null;
+        }
+    }
+
+    public async tryGetRole(guild: Guild, snowflake: string): Promise<Role | null> {
+        try {
+            return (await guild.roles.fetch(snowflake));
+        } catch {
+            return null;
+        }
     }
 }

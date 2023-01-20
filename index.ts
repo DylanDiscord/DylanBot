@@ -22,8 +22,9 @@ for (const routeIteration of fs.readdirSync(Config.paths.apiRoutes).filter(e => 
     try {
         //noinspection JSPotentiallyInvalidConstructorUsage
         const route: BaseRoute = new (await import(`${Config.paths.apiRoutes}/${routeIteration.replace(/\.ts/gmi, ".js")}`)).default();
-        for (const name of Object.getOwnPropertyNames(BaseRoute.prototype))
-            (client.api as any)[name](route.path, (route as any)[name]);
+        for (const name of Object.getOwnPropertyNames(BaseRoute.prototype)) {
+            (client.api as any)[name](((route as any)[`${name}Path`] ?? route.path), (route as any)[name]);
+        }
     } catch {}
 }
 
