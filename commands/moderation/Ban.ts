@@ -13,6 +13,4 @@ export default class Ban extends CommandBase {
     public async run(): Promise<void> {
 
     }
-
-
 }
