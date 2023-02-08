@@ -3,7 +3,7 @@ import { Config } from "../exportMain.js";
 import { client } from "../exportMain.js";
 import fs from "node:fs";
 
-export default (guild: Guild) => {
+export default (guild: Guild): void => {
     {
         if (client.guild_databases.has(guild.id)) {
             client.guild_databases.get(guild.id)!.close();

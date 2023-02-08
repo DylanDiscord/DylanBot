@@ -5,10 +5,12 @@
   "type": "module",
   "main": "index.js",
   "dependencies": {
+    "@types/express-rate-limit": "^6.0.0",
     "axios": "^1.2.2",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
     "sqlite3": "^5.1.4",
     "ts-node": "^10.9.1"
   },

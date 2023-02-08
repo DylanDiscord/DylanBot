@@ -18,42 +18,17 @@ export default class Warn extends CommandBase {
         const reason: string = this.context.options.getString("razón")!;
         const notify: boolean = this.context.options.getBoolean("notificar") ?? false;
 
-        if (!await client.mod_manager.isModerator(this.context.guild!, this.context.user)) {
-            await this.context.deleteReply();
-            return;
-        }
+        if (!await client.mod_manager.doChecks(this.context, objectiveUser, "No puedes hacer warn a un bot.")) return;
 
-        if (objectiveUser.bot) {
-            const botEmbed: EmbedBuilder = new EmbedBuilder()
-                .setTitle("El usuario es un bot.")
-                .setDescription("No puedes hacer warn a un bot.")
-                .setColor(Config.colors.errorEmbed);
+        const caseNumber: number = await client.mod_manager.addCase(this.context.guild!, {caseType: CaseTypes.WARN, userID: objectiveUser.id, moderatorID: this.context.user.id, reason: reason, start: Math.round(Date.now() / 1000)})
 
-            await this.context.editReply({embeds: [botEmbed]});
-            return;
-        }
-
-        const caseNumber: number = await client.mod_manager.addCase(this.context.guild!, {$caseType: CaseTypes.WARN, $userID: objectiveUser.id, $moderatorID: this.context.user.id, $reason: reason, $start: Math.round(Date.now() / 1000)})
+        if (notify) await client.mod_manager.notify(this.context, objectiveUser, reason, "Obtuviste un aviso | Warn");
 
         const embed: EmbedBuilder = new EmbedBuilder()
             .setTitle(`Caso: ${caseNumber} | Warn`)
             .setDescription(`**Usuario:** \`${objectiveUser.tag}\`\n**Moderador:** \`${this.context.user.tag}\`\n**Razón:** \`${reason}\``)
             .setColor(Config.colors.defaultEmbed)
             .setTimestamp(Date.now());
-
-        if (notify) {
-            const notifyEmbed: EmbedBuilder = new EmbedBuilder()
-                .setTitle("Obtuviste un aviso | Warn")
-                .setDescription(`**Moderador:** \`${this.context.user.tag}\`\n**Servidor:** \`${this.context.guild!.name}\`\n**Razón:** \`${reason}\``)
-                .setColor(Config.colors.defaultEmbed)
-                .setTimestamp(Date.now());
-
-            try  {
-                await objectiveUser.send({embeds: [notifyEmbed]});
-            } catch {
-                embed.setFooter({text: "No se pudo enviar la notificación"});
-            }
-        }
 
         await this.context.editReply({embeds: [embed]});
     }

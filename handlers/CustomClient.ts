@@ -1,4 +1,4 @@
-import {Client, ClientOptions, Collection, Guild, Role, User} from "discord.js";
+import {Client, ClientOptions, Collection, Guild, GuildMember, Role, User} from "discord.js";
 import express, {Express} from "express";
 import {ModManager, CommandBase, CustomDb} from "../exportMain.js";
 import Sqlite3 from "sqlite3";
@@ -24,15 +24,18 @@ export default class CustomClient extends Client {
     }
 
     private async registerDb(): Promise<void> {
-        await this.global_database.runAsync("CREATE TABLE IF NOT EXISTS PremiumServers(serverId INTEGER PRIMARY KEY, unique(serverID))");
+        await this.global_database.runAsync("CREATE TABLE IF NOT EXISTS PremiumServers(serverID INTEGER PRIMARY KEY, unique(serverID))");
         this.guilds.cache.forEach((async g => {
-            const db: CustomDb = new CustomDb(`${this._db_path}\\${g.id}.db`, Sqlite3.OPEN_CREATE | Sqlite3.OPEN_READWRITE);
-            await db.allAsync("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
-            await db.allAsync("CREATE TABLE IF NOT EXISTS UserCases(caseID INTEGER PRIMARY KEY AUTOINCREMENT, userID TEXT, moderatorID TEXT, reason TEXT, caseType INTEGER, start INTEGER, end INTEGER, unique(caseID))");
-            await db.allAsync("CREATE TABLE IF NOT EXISTS ServerModerators(roleID INTEGER PRIMARY KEY, unique(roleID));");
-            await this.guild_databases.set(g.id, db);
+            await this.addDatabase(new CustomDb(`${this._db_path}\\${g.id}.db`, Sqlite3.OPEN_CREATE | Sqlite3.OPEN_READWRITE), g);
         }));
         await console.log("Databases registered correctly.");
+    }
+
+    public async addDatabase(db: CustomDb, g: Guild): Promise<void> {
+        await db.allAsync("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
+        await db.allAsync("CREATE TABLE IF NOT EXISTS UserCases(caseID INTEGER PRIMARY KEY AUTOINCREMENT, userID TEXT, moderatorID TEXT, reason TEXT, caseType INTEGER, start INTEGER, end INTEGER, unique(caseID))");
+        await db.allAsync("CREATE TABLE IF NOT EXISTS ServerModerators(roleID INTEGER PRIMARY KEY, unique(roleID));");
+        this.guild_databases.set(g.id, db);
     }
 
     public async tryGetGuild(snowflake: string): Promise<Guild | null> {
@@ -54,6 +57,14 @@ export default class CustomClient extends Client {
     public async tryGetRole(guild: Guild, snowflake: string): Promise<Role | null> {
         try {
             return (await guild.roles.fetch(snowflake));
+        } catch {
+            return null;
+        }
+    }
+
+    public async tryGetMember(guild: Guild, snowflake: string): Promise<GuildMember | null> {
+        try {
+            return (await guild.members.fetch(snowflake));
         } catch {
             return null;
         }

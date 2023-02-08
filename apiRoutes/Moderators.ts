@@ -3,15 +3,15 @@ import { Request, Response } from "express";
 import { Guild, Role } from "discord.js";
 
 export default class Moderators extends BaseRoute {
-    path: string | RegExp = /\/moderators\/\d{18,19}\/\d{18,19}/;
+    path: string | RegExp = /\/moderators\/\d{18,19}\/\d{18,19}/i;
 
-    public override getPath: string | RegExp = /\/moderators\/\d{18,19}$/;
+    public override getPath: string | RegExp = /\/moderators\/\d{18,19}$/i;
     public override async get(req: Request, res: Response): Promise<void> {
         const args: Array<string> = req.originalUrl.substring(1).split("/");
         const guild: Guild | null = await client.tryGetGuild(args[1]);
 
         if (guild == null) {
-            BaseRoute.badRequest(res, "The guild doesn't exist.");
+            BaseRoute.badRequest(res, "The guild doesn't exist, or the bot isn't on it.");
             return;
         }
 

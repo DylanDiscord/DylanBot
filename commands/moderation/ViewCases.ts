@@ -12,6 +12,7 @@ import {
     Message,
     InteractionCollector,
 } from "discord.js";
+import {CaseTypes} from "../../handlers/ModManager";
 
 export default class ViewCases extends CommandBase {
     command: OCommandBuilder = new SlashCommandBuilder()
@@ -50,8 +51,8 @@ export default class ViewCases extends CommandBase {
 
         const fields: Array<EmbedField> = await Promise.all<EmbedField>(
             cases.map(async c => ({
-                name: `Caso: ${c.$caseID}`,
-                value: `**TAG del usuario:** \`${(await client.users.fetch(c.$userID)).tag}\`\n**ID del usuario:** \`${c.$userID}\`\n**TAG del moderador:** \`${(await client.users.fetch(c.$moderatorID)).tag}\`\n**ID del moderador:** \`${c.$userID}\`\n**Razón:** \`${c.$reason}\``,
+                name: `Caso: ${c.caseID} | ${CaseTypes.parse(c.caseType)}`,
+                value: `**TAG del usuario:** \`${(await client.users.fetch(c.userID)).tag}\`\n**ID del usuario:** \`${c.userID}\`\n**TAG del moderador:** \`${(await client.users.fetch(c.moderatorID)).tag}\`\n**ID del moderador:** \`${c.userID}\`\n**Razón:** \`${c.reason}\``,
                 inline: false
             }))
         );

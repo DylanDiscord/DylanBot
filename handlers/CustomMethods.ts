@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import * as process from "process";
 import axios from "axios";
-import CustomDb from "./CustomDb";
 
 export namespace CustomMethods {
     // noinspection JSUnusedLocalSymbols
@@ -35,6 +34,20 @@ export namespace CustomMethods {
         const results: Array<string> = [];
         for (const result of gifs.results) results.push(result.media_formats.gif.url);
         return results;
+    }
+
+    export function parseDurationToSeconds(duration: string): number | null {
+        const regex: RegExp = /([0-9]+)([dhms])/gi;
+        if (!regex.test(duration)) return null;
+        const matches: RegExpMatchArray | null = duration.match(regex);
+        if (matches == null || matches.length == 0) return null;
+        let totalSeconds: number = 0;
+        for (const match of matches) {
+            const num: number = parseInt(match.match(/[0-9]+/g)![0]);
+            const stamp: string = match.match(/[a-z]/i)![0];
+            totalSeconds += num * ({d: 86400, h: 3600, m: 60, s: 1} as any)[stamp];
+        }
+        return totalSeconds;
     }
 }
 

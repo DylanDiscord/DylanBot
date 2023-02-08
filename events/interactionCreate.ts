@@ -2,7 +2,7 @@ import { CommandInteraction } from "discord.js";
 import { CommandBase } from "../handlers/CommandBase.js";
 import { client } from "../exportMain.js";
 
-export default async (interaction: CommandInteraction) => {
+export default async (interaction: CommandInteraction): Promise<void> => {
     if (interaction.isChatInputCommand()) {
         const context: CommandBase = client.commands.get(interaction.commandName)!;
         context.context = interaction;
