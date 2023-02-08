@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import Sqlite3 from "sqlite3";
 import * as process from "process";
 import axios from "axios";
 
@@ -28,10 +27,6 @@ export namespace CustomMethods {
         return files;
     }
 
-    export async function fillDatabase(ref: {database: Sqlite3.Database}): Promise<void> {
-        ref.database.all("CREATE TABLE IF NOT EXISTS UserLevels(userID TEXT, experience INTEGER, level INTEGER, unique(userID));");
-    }
-
     export const randomColor = () => Math.floor(Math.random() * 16777215)
 
     export async function getGifsFromTenor(ref: {query: string, locale?: LanguageCodes, limit?: number}): Promise<Array<string>> {
@@ -39,6 +34,20 @@ export namespace CustomMethods {
         const results: Array<string> = [];
         for (const result of gifs.results) results.push(result.media_formats.gif.url);
         return results;
+    }
+
+    export function parseDurationToSeconds(duration: string): number | null {
+        const regex: RegExp = /([0-9]+)([dhms])/gi;
+        if (!regex.test(duration)) return null;
+        const matches: RegExpMatchArray | null = duration.match(regex);
+        if (matches == null || matches.length == 0) return null;
+        let totalSeconds: number = 0;
+        for (const match of matches) {
+            const num: number = parseInt(match.match(/[0-9]+/g)![0]);
+            const stamp: string = match.match(/[a-z]/i)![0];
+            totalSeconds += num * ({d: 86400, h: 3600, m: 60, s: 1} as any)[stamp];
+        }
+        return totalSeconds;
     }
 }
 

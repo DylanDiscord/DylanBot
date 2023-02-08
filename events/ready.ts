@@ -7,7 +7,7 @@ import { client } from "../exportMain.js";
 import { CustomMethods } from "../exportMain.js";
 import axios from "axios";
 
-export default async () => {
+export default async (): Promise<void> => {
     try {
         await (new REST({version: "10"}).setToken(process.env.TOKEN!))
             .put(Routes.applicationCommands(process.env.APPID!), {body: client.commands.filter(c => c.enabled).map(c => c.command.toJSON())});

@@ -20,7 +20,8 @@
   "paths": {
     "databases": "./databases",
     "commands": "./commands",
-    "events": "./events"
+    "events": "./events",
+    "apiRoutes": "./apiRoutes"
   },
   "colors": {
     "defaultEmbed": 131056,

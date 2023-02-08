@@ -21,7 +21,7 @@ export default class BotStats extends CommandBase {
         const mostUsedCommand: CommandBase = client.commands.toJSON().sort((a, b) =>  b.use_count - a.use_count)[0];
 
         const embed: EmbedBuilder = new EmbedBuilder()
-            .setTitle(`👋 Hola Soy ${client.user!.username} 👋`)
+            .setTitle(`👋 Hola Soy ${client.user!.username}`)
             .setDescription(`\`🕐\` ┇ Estuve activo por los pasados \`${parsedString.trim()}\`.\n\n\`💖\` ┇ Estoy en un total de \`${client.guilds.cache.size}\` servidores con \`${client.users.cache.size}\` miembros.\n\n\`⚙️\` ┇ He ejecutado un total de \`${totalCommands}\` commandos\n\n\`🗣️\` ┇ Mi comando mas usado es \`${mostUsedCommand.command.name}${mostUsedCommand.command.options.map(o => ` ${o.toJSON().name} `).toString().trimEnd()}\` con \`${mostUsedCommand.use_count}\` ${mostUsedCommand.use_count == 1 ? "uso" : "usos"}.`)
             .setColor(Config.colors.defaultEmbed)
             .setImage("https://cdn.discordapp.com/attachments/1022949540921348156/1036390043704631347/standard_2.gif")
